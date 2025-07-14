@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+body, html {
+    background: url('{% static "your_scenic_image.jpg" %}') center/cover no-repeat;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+.bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 20, 40, 0.65);
+    z-index: 1;
+}
+.result-main-container {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+.result-grid {
+    display: grid;
+    grid-template-columns: 0.5fr 0.5fr; /* Two equal columns */
+    grid-template-rows: auto auto; /* Stack user and score panels vertically */
+    gap: 32px;
+    width: 90vw;
+    max-width: 1200px;
+    margin-bottom: 40px;
+    min-height: 600px;
+}
+.glass-panel {
+    background: rgba(30, 40, 60, 0.55);
+    border-radius: 28px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+    padding: 32px 32px 24px 32px;
+    color: #d68a3c;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+/* Profile panel - top left */
+.profile-panel {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: 280px;
+    padding: 24px 32px 16px 32px !important;
+    border-radius: 12px;
+    background: rgba(30, 40, 60, 0.55);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+.profile-panel h2 {
+    color: #d68a3c;
+    font-size: 2.2em;
+    margin-bottom: 28px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: left;
+}
+.profile-panel .profile-details {
+    margin-bottom: 32px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+.profile-panel .profile-details span {
+    font-size: 1.15em;
+    margin-bottom: 10px;
+    color: #fff;
+    text-align: left;
+}
+/* CIBIL Score panel - bottom left */
+.score-panel {
+    grid-column: 1;
+    grid-row: 2;
+}
+/* Banks panel - right side (spans both rows) */
+.banks-panel {
+    grid-column: 2;
+    grid-row: 1 / span 2; /* Spans both rows */
+}
+.glass-panel h2 {
+    color: #d68a3c;
+    font-size: 2em;
+    margin-bottom: 24px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.profile-details {
+    margin-bottom: 32px;
+}
+.profile-details span {
+    display: block;
+    font-size: 1.1em;
+    margin-bottom: 8px;
+    color: #fff;
+}
+.credit-meter {
+    margin-top: 24px;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.score-title {
+    color: white;
+    font-size: 2em;
+    margin-bottom: 30px;
+    font-weight: 300;
+}
+.score-meter {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+}
+.meter-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    position: relative;
+    margin: 0 auto;
+    background: conic-gradient(
+        from 0deg,
+        #ff4444 0deg 72deg,
+        #ff8800 72deg 144deg,
+        #ffdd00 144deg 216deg,
+        #88dd00 216deg 288deg,
+        #00dd88 288deg 360deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.meter-inner {
+    width: 150px;
+    height: 150px;
+    background: rgba(102, 126, 234, 0.9);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+.score-number {
+    font-size: 3em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.score-category {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+.score-range {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    color: white;
+    font-size: 0.9em;
+}
+.banks-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.section-title {
+    color: white;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    font-weight: 300;
+}
+.bank-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.bank-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+.bank-info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+.bank-logo {
+    width: 60px;
+    height: 40px;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #333;
+    font-size: 0.8em;
+    margin-right: 15px;
+}
+.bank-details {
+    color: white;
+    text-align: left;
+}
+.bank-name {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+.bank-rate {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+.loan-amount {
+    color: #00ff88;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+.back-btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+.recommended-badge {
+    background: linear-gradient(45deg, #00ff88, #00dd88);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-left: 10px;
+}
+@media (max-width: 900px) {
+    .result-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 18px;
+        width: 98vw;
+    }
+    .banks-panel {
+        grid-column: 1;
+        grid-row: 3;
+    }
+}
+</style>
+
+<div class="bg-overlay"></div>
+<div class="result-main-container">
+    <div class="result-grid">
+        <!-- Top Left: User Profile -->
+        <div class="glass-panel profile-panel">
+            <h2>User profile</h2>
+            <div class="profile-details">
+                <span><b>Name:</b> {{ name }}</span>
+                <span><b>Age:</b> {{ age }}</span>
+                <span><b>Salary:</b> ₹{{ monthly_income }}</span>
+                <span><b>Loan Amount:</b> ₹{{ desired_amount }}</span>
+                <span><b>Existing Loan:</b> {{ existing_loans }}</span>
+            </div>
+        </div>
+        
+        <!-- Bottom Left: CIBIL Score -->
+        <div class="glass-panel score-panel">
+            <div class="credit-meter">
+                <div class="score-title">Your CIBIL Score</div>
+                <div class="score-meter">
+                    <div class="meter-circle">
+                        <div class="meter-inner">
+                            <div class="score-number">{{ predicted_score }}</div>
+                            <div class="score-category">{{ score_category }}</div>
+                        </div>
+                    </div>
+                    <div class="score-range">
+                        <span>300</span>
+                        <span>900</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Side: Recommended Banks (spans both rows) -->
+        <div class="glass-panel banks-panel">
+            <div class="banks-section">
+                <h2 class="section-title">Recommended Banks</h2>
+                {% for bank in banks %}
+                <div class="bank-card">
+                    <div class="bank-info">
+                        <div class="bank-logo">{{ bank.short_name }}</div>
+                        <div class="bank-details">
+                            <div class="bank-name">
+                                {{ bank.name }}
+                                {% if forloop.first %}
+                                <span class="recommended-badge">RECOMMENDED</span>
+                                {% endif %}
+                            </div>
+                            <div class="bank-rate">Interest Rate: {{ bank.interest_rate }}%</div>
+                            <div class="loan-amount">₹{{ bank.eligible_amount|floatformat:0 }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="bank-card">
+                    <div class="bank-info">
+                        <div style="color: white; text-align: center; width: 100%;">
+                            No banks available for your current CIBIL score.<br>
+                            Consider improving your credit profile.
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Centered "Check Another Score" button at bottom -->
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{% url 'home' %}" class="back-btn">Check Another Score</a>
+    </div>
+</div>
+{% endblock %}

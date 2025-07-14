@@ -1,0 +1,112 @@
+@import url('E:\cibil_prediction\static\your_scenic_image.jpg');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: url('E:\cibil_prediction\static\your_scenic_image.jpg') no-repeat center center/cover;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+  color: white;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 10px 0;
+}
+
+h1 .dot {
+  color: #3b82f6;
+}
+
+h4 {
+  font-weight: 600;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+p {
+  font-size: 14px;
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+p a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+form input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 14px;
+  outline: none;
+}
+
+.name-row {
+  display: flex;
+  gap: 10px;
+}
+
+.name-row input {
+  flex: 1;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.change-method {
+  background: #444;
+  color: white;
+}
+
+.create-account {
+  background: #3b82f6;
+  color: white;
+}
+
+.create-account:hover {
+  background: #2563eb;
+}
+
+.change-method:hover {
+  background: #333;
+}
